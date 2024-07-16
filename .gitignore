@@ -1,1 +1,162 @@
+# Ignore Visual Studio temporary files, build results, and
+# folder configurations
+*.log
+*.user
+*.suo
+*.unsuccessfulbuild
+*.userosscache
+*.userprefs
 
+# User-specific files
+.vscode/
+.vscode/**
+.vs/
+.vs/**
+
+# Mono Auto Generated Files
+mono_crash.*
+
+# Windows image file caches
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# VS Code
+.history/
+.ionide/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+*.log
+*.tlog
+
+# Compiled binary output
+*.dll
+*.exe
+*.so
+*.dylib
+*.lib
+
+# NuGet
+*.nupkg
+# The packages folder can be ignored because of package restore
+**/packages/*
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Visual Studio profiler
+*.vsp
+*.vspx
+
+# TFS 2012 Local Workspace
+$tf/
+
+# NCrunch
+*.ncrunchsolution
+*.ncrunchproject
+*.ncrunch
+
+# Web workspaces
+.localhistory
+
+# User-specific files
+*.rsuser
+*.sln.docstates
+
+# Mono Auto Generated Files
+mono_crash.*
+
+# Windows specific files
+*.prf
+*.pdb
+*.obj
+*.log
+*.mdb
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# StyleCop
+StyleCopReport.xml
+
+# === Sensible default exclusions ===
+
+# Ignore node_modules
+node_modules/
+
+# Ignore dist folder
+dist/
+
+# Ignore coverage folder
+coverage/
+
+# Ignore .env files
+.env
+.env.*.local
+
+# Ignore logs
+logs
+*.log
+
+# Ignore runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Ignore linting
+.eslintcache
+
+# Ignore IDEs and editors
+.vscode/
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln.docstates
+
+# Ignore bin and obj folders
+**/[Bb]in/
+**/[Oo]bj/
+
+# Ignore the .vs folder
+.vs/
