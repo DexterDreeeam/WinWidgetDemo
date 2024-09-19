@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Tips;
 using Windows.Storage;
 
 namespace PhotoWidget
@@ -37,6 +38,7 @@ namespace PhotoWidget
     {
         public static Dictionary<string, WidgetInfo> Widgets = new Dictionary<string, WidgetInfo>();
         private static ManualResetEvent emptyWidgetEvent = new ManualResetEvent(false);
+        private const int showPicsNums = 3;
 
         // Called when Widget is viewed by user
         public void Activate(WidgetContext widgetContext)
@@ -111,21 +113,45 @@ namespace PhotoWidget
             return text;
         }
 
+        public static string GetDataURL(string imgFile)
+        {
+            return "data:image/"
+                        + Path.GetExtension(imgFile).Replace(".", "")
+                        + ";base64,"
+                        + Convert.ToBase64String(File.ReadAllBytes(imgFile));
+        }
+
+        private string[] GetLatestJpgFiles(int numberOfFiles)
+        {
+
+            string picturesPath = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+
+            var jpgFiles = Directory.GetFiles(picturesPath, "*.jpg");
+
+            var latestFiles = jpgFiles
+                .Select(file => new FileInfo(file))
+                .OrderByDescending(fileInfo => fileInfo.LastWriteTime)
+                .Take(numberOfFiles)
+                .Select(fileInfo => fileInfo.FullName)
+                .ToArray();
+
+            return latestFiles;
+        }
         private string GetJsonData()
         {
-            var ss = new SystemSensor();
-            var files = ss.GetRecentPhotos();
+            var latestPics = GetLatestJpgFiles(showPicsNums);
+            ImageInfoProvider imageInfoProvider = new ImageInfoProvider();
             var data = new WidgetData()
             {
-                i1 = "https://ichef.bbci.co.uk/ace/ws/800/cpsprodpb/1313B/production/_133293187_img_0598.jpg",
-                t1 = "pic1",
-                desc1 = "Breathtaking coastal sunset with a silhouette of rugged cliffs, a serene, peaceful ambiance",
-                i2 = "https://ichef.bbci.co.uk/ace/ws/800/cpsprodpb/3673/production/_133293931_dee5870a-2305-4b60-9cc7-1faf5bd5cc0e.jpg",
-                t2 = "pic2",
-                desc2 = "Charming alleyway in a historic European village, lined with colorful flowers",
-                i3 = "https://ichef.bbci.co.uk/ace/ws/800/cpsprodpb/C136/production/_131626494_grandpalace.jpg",
-                t3 = "pic3",
-                desc3 = "Majestic Grand Palace in Bangkok, with its ornate golden architecture",
+                i1 = GetDataURL(latestPics[0]),
+                t1 = Path.GetFileNameWithoutExtension(latestPics[0]),
+                desc1 = Task.Run(() => imageInfoProvider.GetImageInfo(latestPics[0])).GetAwaiter().GetResult(),
+                i2 = GetDataURL(latestPics[1]),
+                t2 = Path.GetFileNameWithoutExtension(latestPics[1]),
+                desc2 = Task.Run(() => imageInfoProvider.GetImageInfo(latestPics[1])).GetAwaiter().GetResult(),
+                i3 = GetDataURL(latestPics[2]),
+                t3 = Path.GetFileNameWithoutExtension(latestPics[2]),
+                desc3 = Task.Run(() => imageInfoProvider.GetImageInfo(latestPics[2])).GetAwaiter().GetResult(),
             };
             return JsonSerializer.Serialize(data);
         }
