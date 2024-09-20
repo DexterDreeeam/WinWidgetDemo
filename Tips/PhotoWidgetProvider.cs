@@ -39,6 +39,7 @@ namespace PhotoWidget
         public static Dictionary<string, WidgetInfo> Widgets = new Dictionary<string, WidgetInfo>();
         private static ManualResetEvent emptyWidgetEvent = new ManualResetEvent(false);
         private const int showPicsNums = 3;
+        private string[] latestPics = new string[3];
 
         // Called when Widget is viewed by user
         public void Activate(WidgetContext widgetContext)
@@ -137,27 +138,31 @@ namespace PhotoWidget
 
             return latestFiles;
         }
+
         private string GetJsonData()
-        {
-            var latestPics = GetLatestJpgFiles(showPicsNums);
+        { 
+            latestPics = GetLatestJpgFiles(showPicsNums);
             ImageInfoProvider imageInfoProvider = new ImageInfoProvider();
             var data = new WidgetData()
             {
                 i1 = GetDataURL(latestPics[0]),
                 t1 = Path.GetFileNameWithoutExtension(latestPics[0]),
-                desc1 = Task.Run(() => imageInfoProvider.GetImageInfo(latestPics[0])).GetAwaiter().GetResult(),
+                desc1 = imageInfoProvider.GetImageInfo(latestPics[0]),
                 i2 = GetDataURL(latestPics[1]),
                 t2 = Path.GetFileNameWithoutExtension(latestPics[1]),
-                desc2 = Task.Run(() => imageInfoProvider.GetImageInfo(latestPics[1])).GetAwaiter().GetResult(),
+                desc2 = imageInfoProvider.GetImageInfo(latestPics[1]),
                 i3 = GetDataURL(latestPics[2]),
                 t3 = Path.GetFileNameWithoutExtension(latestPics[2]),
-                desc3 = Task.Run(() => imageInfoProvider.GetImageInfo(latestPics[2])).GetAwaiter().GetResult(),
+                desc3 = imageInfoProvider.GetImageInfo(latestPics[2]),
+
             };
             return JsonSerializer.Serialize(data);
         }
 
         private void UpdateWidget(WidgetInfo info)
         {
+            var newLatestPics = GetLatestJpgFiles(showPicsNums);
+            if (newLatestPics.SequenceEqual(latestPics)) return;
             var jsonTemplate = GetTemplateAsync().GetAwaiter().GetResult() ?? "{}";
             var jsonData = GetJsonData();
 
